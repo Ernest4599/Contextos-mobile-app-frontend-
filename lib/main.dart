@@ -103,13 +103,10 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.fromLTRB(20, 12, 12, 0),
       child: Row(
         children: [
-          Container(
+          SizedBox(
             width: 42,
             height: 42,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.blue600, width: 3),
-            ),
+            child: CustomPaint(painter: _CLogoPainter(strokeColor: Colors.white)),
           ),
           const SizedBox(width: 12),
           const Expanded(
@@ -139,14 +136,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+
   Widget _buildLogo() {
     return SizedBox(
       width: 180,
       height: 180,
-      child: CustomPaint(painter: _CLogoPainter()),
+      child: CustomPaint(painter: _CLogoPainter(strokeColor: Colors.white)),
     );
   }
-
   Widget _buildHeadline() {
     return Column(
       children: [
@@ -304,6 +301,10 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _CLogoPainter extends CustomPainter {
+  final Color strokeColor;
+
+  _CLogoPainter({required this.strokeColor});
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
@@ -312,9 +313,7 @@ class _CLogoPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.16
       ..strokeCap = StrokeCap.round
-      ..shader = const LinearGradient(
-        colors: [AppColors.blue400, AppColors.blue600],
-      ).createShader(Rect.fromCircle(center: center, radius: radius));
+      ..color = strokeColor;
 
     final rect = Rect.fromCircle(center: center, radius: radius);
     canvas.drawArc(rect, 0.45, 5.4, false, paint);
@@ -332,5 +331,6 @@ class _CLogoPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
+  bool shouldRepaint(covariant _CLogoPainter oldDelegate) =>
+      oldDelegate.strokeColor != strokeColor;
+} 
